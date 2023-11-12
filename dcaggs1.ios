@@ -1,6 +1,6 @@
-Current configuration : 3531 bytes
+Current configuration : 3532 bytes
 !
-! Last configuration change at 21:27:12 mst Tue May 9 2023
+! Last configuration change at 11:52:29 mst Sat Oct 14 2023
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone
@@ -62,7 +62,7 @@ vlan 10
 vlan 20
  name DC-Users
 !
-! 
+!
 !
 !
 !
@@ -147,7 +147,7 @@ interface Vlan10
 interface Vlan20
  description DC-Users
  ip address 10.0.20.2 255.255.255.0
- ip helper-address 10.0.10.10 
+ ip helper-address 10.0.10.10
  ip ospf 1 area 0.0.0.0
  glbp 20 ip 10.0.20.1
 !
@@ -178,7 +178,7 @@ control-plane
 !
 !
 line con 0
- session-timeout 30 
+ session-timeout 30
  exec-timeout 15 0
  privilege level 15
  logging synchronous
@@ -204,4 +204,3 @@ ntp server time4.google.com
 !
 !
 end
-

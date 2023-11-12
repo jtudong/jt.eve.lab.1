@@ -1,6 +1,6 @@
-Current configuration : 2428 bytes
+Current configuration : 2407 bytes
 !
-! Last configuration change at 20:43:02 MST Mon May 8 2023 by lab
+! No configuration change since last restart
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
@@ -79,7 +79,7 @@ redundancy
 !
 lldp run
 !
-! 
+!
 !
 !
 !
@@ -152,7 +152,7 @@ control-plane
 !
 !
 line con 0
- session-timeout 30 
+ session-timeout 30
  exec-timeout 15 0
  privilege level 15
  logging synchronous
@@ -172,4 +172,3 @@ ntp server time2.google.com
 ntp server time4.google.com
 !
 end
-

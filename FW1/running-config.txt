@@ -1,4 +1,4 @@
-set deviceconfig system type static 
+set deviceconfig system type static
 set deviceconfig system update-server updates.paloaltonetworks.com
 set deviceconfig system update-schedule threats recurring every-30-mins at 3
 set deviceconfig system update-schedule threats recurring every-30-mins action download-and-install
@@ -11,20 +11,21 @@ set deviceconfig system update-schedule global-protect-datafile recurring daily 
 set deviceconfig system timezone America/Phoenix
 set deviceconfig system service disable-telnet yes
 set deviceconfig system service disable-http yes
+set deviceconfig system service disable-snmp no
 set deviceconfig system hostname FW1
 set deviceconfig system ip-address 172.31.255.4
 set deviceconfig system netmask 255.255.255.0
 set deviceconfig system default-gateway 172.31.255.2
-set deviceconfig system dns-setting servers primary 208.67.222.222
-set deviceconfig system dns-setting servers secondary 4.2.2.1
+set deviceconfig system dns-setting servers primary 10.0.10.10
+set deviceconfig system dns-setting servers secondary 208.67.222.222
 set deviceconfig system motd-and-banner banner-header FW1
 set deviceconfig system motd-and-banner banner-header-color color14
 set deviceconfig system motd-and-banner banner-header-text-color color4
 set deviceconfig system motd-and-banner banner-header-footer-match no
 set deviceconfig system ntp-servers primary-ntp-server ntp-server-address time1.google.com
-set deviceconfig system ntp-servers primary-ntp-server authentication-type none 
+set deviceconfig system ntp-servers primary-ntp-server authentication-type none
 set deviceconfig system ntp-servers secondary-ntp-server ntp-server-address time2.google.com
-set deviceconfig system ntp-servers secondary-ntp-server authentication-type none 
+set deviceconfig system ntp-servers secondary-ntp-server authentication-type none
 set deviceconfig system domain company.pri
 set deviceconfig system snmp-setting access-setting version v2c snmp-community-string company.read
 set deviceconfig system snmp-setting snmp-system location lab2
@@ -54,24 +55,26 @@ set deviceconfig system route service tacplus source address 10.0.0.14/28
 set deviceconfig system route service tacplus source interface ethernet1/2
 set deviceconfig system route service uid-agent source address 10.0.0.14/28
 set deviceconfig system route service uid-agent source interface ethernet1/2
+set deviceconfig system route destination 10.0.10.10 source interface ethernet1/2
+set deviceconfig system route destination 10.0.10.10 source address 10.0.0.14/28
 set deviceconfig setting config rematch yes
 set deviceconfig setting management hostname-type-in-syslog FQDN
 set deviceconfig setting auto-mac-detect yes
 set network interface ethernet ethernet1/1 layer3 ndp-proxy enabled no
 set network interface ethernet ethernet1/1 layer3 sdwan-link-settings upstream-nat enable no
-set network interface ethernet ethernet1/1 layer3 sdwan-link-settings upstream-nat static-ip 
+set network interface ethernet ethernet1/1 layer3 sdwan-link-settings upstream-nat static-ip
 set network interface ethernet ethernet1/1 layer3 sdwan-link-settings enable no
-set network interface ethernet ethernet1/1 layer3 ip 100.64.0.2/30 
+set network interface ethernet ethernet1/1 layer3 ip 100.64.0.2/30
 set network interface ethernet ethernet1/1 layer3 lldp enable yes
 set network interface ethernet ethernet1/1 layer3 lldp profile LLDP-profile-1
 set network interface ethernet ethernet1/1 layer3 interface-management-profile ping
 set network interface ethernet ethernet1/2 layer3 ndp-proxy enabled no
 set network interface ethernet ethernet1/2 layer3 sdwan-link-settings upstream-nat enable no
-set network interface ethernet ethernet1/2 layer3 sdwan-link-settings upstream-nat static-ip 
+set network interface ethernet ethernet1/2 layer3 sdwan-link-settings upstream-nat static-ip
 set network interface ethernet ethernet1/2 layer3 sdwan-link-settings enable no
 set network interface ethernet ethernet1/2 layer3 lldp enable no
 set network interface ethernet ethernet1/2 layer3 lldp profile LLDP-profile-1
-set network interface ethernet ethernet1/2 layer3 ip 10.0.0.14/28 
+set network interface ethernet ethernet1/2 layer3 ip 10.0.0.14/28
 set network interface ethernet ethernet1/2 layer3 interface-management-profile http-https-telnet-ssh-ping
 set network interface ethernet ethernet1/2 comment "link to IAS1 eth0/0"
 set network profiles monitor-profile default interval 3
@@ -80,7 +83,7 @@ set network profiles monitor-profile default action wait-recover
 set network profiles interface-management-profile https-ssh-ping https yes
 set network profiles interface-management-profile https-ssh-ping ssh yes
 set network profiles interface-management-profile https-ssh-ping ping yes
-set network profiles interface-management-profile https-ssh-ping permitted-ip 10.0.20.0/24 
+set network profiles interface-management-profile https-ssh-ping permitted-ip 10.0.20.0/24
 set network profiles interface-management-profile ping ping yes
 set network profiles interface-management-profile ssh-ping ssh yes
 set network profiles interface-management-profile ssh-ping ping yes
@@ -173,7 +176,7 @@ set network virtual-router default protocol bgp peer-group ISP soft-reset-with-s
 set network virtual-router default protocol bgp peer-group ISP enable yes
 set network virtual-router default protocol rip enable no
 set network virtual-router default protocol ospf enable yes
-set network virtual-router default protocol ospf area 0.0.0.0 type normal 
+set network virtual-router default protocol ospf area 0.0.0.0 type normal
 set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 bfd profile Inherit-vr-global-setting
 set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 enable yes
 set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 passive no
@@ -184,7 +187,7 @@ set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet
 set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 dead-counts 4
 set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 retransmit-interval 5
 set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 transit-delay 1
-set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 link-type broadcast 
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 link-type broadcast
 set network virtual-router default protocol ospf router-id 100.64.0.2
 set network virtual-router default protocol ospf allow-redist-default-route yes
 set network virtual-router default protocol ospf export-rules redist-default new-path-type ext-2
@@ -193,14 +196,14 @@ set network virtual-router default protocol ospfv3 enable no
 set network virtual-router default protocol redist-profile redist-default filter type [ bgp static ]
 set network virtual-router default protocol redist-profile redist-default filter destination 0.0.0.0/0
 set network virtual-router default protocol redist-profile redist-default priority 1
-set network virtual-router default protocol redist-profile redist-default action redist 
+set network virtual-router default protocol redist-profile redist-default action redist
 set network virtual-router default interface [ ethernet1/1 ethernet1/2 ]
-set network virtual-router default ecmp algorithm ip-modulo 
+set network virtual-router default ecmp algorithm ip-modulo
 set network lldp enable yes
-set shared application 
-set shared application-group 
-set shared service 
-set shared service-group 
+set shared application
+set shared application-group
+set shared service
+set shared service-group
 set shared botnet configuration http dynamic-dns enabled yes
 set shared botnet configuration http dynamic-dns threshold 5
 set shared botnet configuration http malware-sites enabled yes
@@ -233,7 +236,7 @@ set shared server-profile ldap ldap_profile ssl no
 set shared server-profile ldap ldap_profile base DC=company,DC=pri
 set zone inside network layer3 ethernet1/2
 set zone outside network layer3 ethernet1/1
-set user-id-collector server-monitor 
+set user-id-collector server-monitor
 set user-id-collector setting wmi-account company\svc_ldap
 set user-id-collector setting wmi-password -AQ==E3IBJ3pufeRKdFuAd+xxaAuM7Qk=PM8yGuEXJhllaJ1xZ2pFaQ==
 set user-id-collector setting domain-name company.pri
@@ -241,9 +244,9 @@ set user-id-collector setting enable-session yes
 set tag inside color color2
 set tag outside color color1
 set tag permissive color color20
-set service-group 
-set service 
-set schedule 
+set service-group
+set service
+set schedule
 set rulebase default-security-rules rules intrazone-default action drop
 set rulebase default-security-rules rules intrazone-default log-start yes
 set rulebase default-security-rules rules intrazone-default log-end no
@@ -335,9 +338,21 @@ set rulebase security rules "Allow Internet - ALL" destination-hip any
 set rulebase security rules "Allow Internet - ALL" action allow
 set rulebase security rules "Allow Internet - ALL" tag [ permissive outside ]
 set rulebase security rules "Allow Internet - ALL" rule-type interzone
+set rulebase security rules "permit FW1 to server subnet" to inside
+set rulebase security rules "permit FW1 to server subnet" from inside
+set rulebase security rules "permit FW1 to server subnet" source "fw1 eth1-2"
+set rulebase security rules "permit FW1 to server subnet" destination 10.0.10.0/24
+set rulebase security rules "permit FW1 to server subnet" source-user any
+set rulebase security rules "permit FW1 to server subnet" category any
+set rulebase security rules "permit FW1 to server subnet" application any
+set rulebase security rules "permit FW1 to server subnet" service application-default
+set rulebase security rules "permit FW1 to server subnet" source-hip any
+set rulebase security rules "permit FW1 to server subnet" destination-hip any
+set rulebase security rules "permit FW1 to server subnet" action allow
+set rulebase security rules "permit FW1 to server subnet" rule-type intrazone
 set import network interface [ ethernet1/1 ethernet1/2 ]
-set application-group 
-set application 
+set application-group
+set application
 set address "ISP1 e0-1" ip-netmask 100.64.0.1/32
 set address "fw1 eth1-1" ip-netmask 100.64.0.2/32
 set address DC-Users ip-netmask 10.0.20.0/24
@@ -350,4 +365,3 @@ set mgt-config users admin phash $5$kvbbeuuh$fW4Zow37zSeCWP/RyAfveBqBTcntSHOqr.0
 set mgt-config users admin permissions role-based superuser yes
 set mgt-config password-complexity enabled yes
 set mgt-config password-complexity minimum-length 8
-[edit]
