@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<config version="10.1.0" urldb="paloaltonetworks" detail-version="10.1.9">
+<config version="10.1.0" urldb="paloaltonetworks" detail-version="10.1.11">
   <mgt-config>
     <users>
       <entry name="admin">
@@ -10,9 +10,17 @@
           </role-based>
         </permissions>
       </entry>
+      <entry name="lab">
+        <permissions>
+          <role-based>
+            <superuser>yes</superuser>
+          </role-based>
+        </permissions>
+        <phash>$5$qyunurek$LvM5XXI2gcuQw4z7h157EFIh2r5EiDGOBXnSusJp9B1</phash>
+      </entry>
     </users>
     <password-complexity>
-      <enabled>yes</enabled>
+      <enabled>no</enabled>
       <minimum-length>8</minimum-length>
     </password-complexity>
   </mgt-config>
@@ -368,6 +376,12 @@
                     </type>
                     <peer>
                       <entry name="ISP1">
+                        <peer-as>65001</peer-as>
+                        <enable-mp-bgp>no</enable-mp-bgp>
+                        <address-family-identifier>ipv4</address-family-identifier>
+                        <enable-sender-side-loop-detection>yes</enable-sender-side-loop-detection>
+                        <reflector-client>non-client</reflector-client>
+                        <peering-type>unspecified</peering-type>
                         <peer-address>
                           <ip>100.64.0.1</ip>
                         </peer-address>
@@ -400,12 +414,6 @@
                         </bfd>
                         <max-prefixes>5000</max-prefixes>
                         <enable>yes</enable>
-                        <peer-as>65001</peer-as>
-                        <enable-mp-bgp>no</enable-mp-bgp>
-                        <address-family-identifier>ipv4</address-family-identifier>
-                        <enable-sender-side-loop-detection>yes</enable-sender-side-loop-detection>
-                        <reflector-client>non-client</reflector-client>
-                        <peering-type>unspecified</peering-type>
                       </entry>
                     </peer>
                     <aggregated-confed-as-path>yes</aggregated-confed-as-path>
@@ -418,6 +426,8 @@
                 <enable>no</enable>
               </rip>
               <ospf>
+                <router-id>100.64.0.2</router-id>
+                <allow-redist-default-route>yes</allow-redist-default-route>
                 <enable>yes</enable>
                 <area>
                   <entry name="0.0.0.0">
@@ -445,8 +455,6 @@
                     </interface>
                   </entry>
                 </area>
-                <router-id>100.64.0.2</router-id>
-                <allow-redist-default-route>yes</allow-redist-default-route>
                 <export-rules>
                   <entry name="redist-default">
                     <new-path-type>ext-2</new-path-type>
@@ -534,6 +542,7 @@
           <service>
             <disable-telnet>yes</disable-telnet>
             <disable-http>yes</disable-http>
+            <disable-snmp>no</disable-snmp>
           </service>
           <hostname>FW1</hostname>
           <ip-address>172.31.255.4</ip-address>
@@ -541,10 +550,17 @@
           <default-gateway>172.31.255.2</default-gateway>
           <dns-setting>
             <servers>
-              <primary>208.67.222.222</primary>
-              <secondary>4.2.2.1</secondary>
+              <primary>10.0.10.10</primary>
+              <secondary>208.67.222.222</secondary>
             </servers>
           </dns-setting>
+          <domain>company.pri</domain>
+          <device-telemetry>
+            <device-health-performance>no</device-health-performance>
+            <product-usage>no</product-usage>
+            <threat-prevention>no</threat-prevention>
+            <region>Americas</region>
+          </device-telemetry>
           <motd-and-banner>
             <banner-header>FW1</banner-header>
             <banner-header-color>color14</banner-header-color>
@@ -565,7 +581,6 @@
               </authentication-type>
             </secondary-ntp-server>
           </ntp-servers>
-          <domain>company.pri</domain>
           <snmp-setting>
             <access-setting>
               <version>
@@ -578,12 +593,6 @@
               <location>lab2</location>
             </snmp-system>
           </snmp-setting>
-          <device-telemetry>
-            <device-health-performance>no</device-health-performance>
-            <product-usage>no</product-usage>
-            <threat-prevention>no</threat-prevention>
-            <region>Americas</region>
-          </device-telemetry>
           <route>
             <service>
               <entry name="deployments">
@@ -653,6 +662,14 @@
                 </source>
               </entry>
             </service>
+            <destination>
+              <entry name="10.0.10.10">
+                <source>
+                  <interface>ethernet1/2</interface>
+                  <address>10.0.0.14/28</address>
+                </source>
+              </entry>
+            </destination>
           </route>
         </system>
         <setting>
@@ -661,6 +678,7 @@
           </config>
           <management>
             <hostname-type-in-syslog>FQDN</hostname-type-in-syslog>
+            <idle-timeout>0</idle-timeout>
           </management>
           <auto-mac-detect>yes</auto-mac-detect>
         </setting>
@@ -691,12 +709,12 @@
           <rulebase>
             <default-security-rules>
               <rules>
-                <entry name="intrazone-default" uuid="4b8b23c5-706d-49ba-9858-57a25cf3a660">
+                <entry name="intrazone-default" uuid="75348bac-9ef3-43f3-83b6-a252c268ebe4">
                   <action>drop</action>
                   <log-start>yes</log-start>
                   <log-end>no</log-end>
                 </entry>
-                <entry name="interzone-default" uuid="9b108188-e2aa-459b-831e-7bbda50e234a">
+                <entry name="interzone-default" uuid="c2ea4b71-62a6-4096-a30c-92d5a6ac4763">
                   <action>deny</action>
                   <log-start>yes</log-start>
                   <log-end>no</log-end>
@@ -705,12 +723,12 @@
             </default-security-rules>
             <nat>
               <rules>
-                <entry name="default PAT" uuid="736b26bd-b820-4ae6-8660-bf5cc37050a0">
+                <entry name="default PAT" uuid="02cba8f2-bfd2-44fc-acac-521e8ff6782a">
                   <source-translation>
                     <dynamic-ip-and-port>
                       <interface-address>
-                        <ip>100.64.0.2/30</ip>
                         <interface>ethernet1/1</interface>
+                        <ip>100.64.0.2/30</ip>
                       </interface-address>
                     </dynamic-ip-and-port>
                   </source-translation>
@@ -733,16 +751,13 @@
             </nat>
             <security>
               <rules>
-                <entry name="permit ALL dc-users" uuid="c27e6cbb-9e50-4fb7-a4c6-ef6722ef15bf">
+                <entry name="permit ALL dc-users" uuid="94e4dd53-7d30-46ec-997b-2ff4419752b1">
                   <to>
                     <member>inside</member>
                   </to>
                   <from>
                     <member>inside</member>
                   </from>
-                  <source>
-                    <member>DC-Users</member>
-                  </source>
                   <destination>
                     <member>any</member>
                   </destination>
@@ -766,22 +781,17 @@
                   </destination-hip>
                   <action>allow</action>
                   <rule-type>intrazone</rule-type>
+                  <source>
+                    <member>DC-Users</member>
+                  </source>
                 </entry>
-                <entry name="permit outside BGP" uuid="f45b0fca-6b4c-40a4-ac9d-5f2a3ee20c62">
+                <entry name="permit outside BGP" uuid="a8245be0-dffc-49aa-bd20-e8e1e50d65e1">
                   <to>
                     <member>outside</member>
                   </to>
                   <from>
                     <member>outside</member>
                   </from>
-                  <source>
-                    <member>fw1 eth1-1</member>
-                    <member>ISP1 e0-1</member>
-                  </source>
-                  <destination>
-                    <member>fw1 eth1-1</member>
-                    <member>ISP1 e0-1</member>
-                  </destination>
                   <source-user>
                     <member>any</member>
                   </source-user>
@@ -805,8 +815,16 @@
                   <tag>
                     <member>outside</member>
                   </tag>
+                  <source>
+                    <member>fw1 eth1-1</member>
+                    <member>ISP1 e0-1</member>
+                  </source>
+                  <destination>
+                    <member>fw1 eth1-1</member>
+                    <member>ISP1 e0-1</member>
+                  </destination>
                 </entry>
-                <entry name="permit OSPF" uuid="dab004bd-635f-4e60-828e-de3b0dc0b4f3">
+                <entry name="permit OSPF" uuid="78e67fc4-cf77-42ce-a6d8-78f6c4cc00c7">
                   <to>
                     <member>inside</member>
                   </to>
@@ -844,20 +862,13 @@
                     <member>inside</member>
                   </tag>
                 </entry>
-                <entry name="permit inside management" uuid="5ffd370f-e9e9-4aa4-979e-4fc97abb1243">
+                <entry name="permit inside management" uuid="f4919879-73b9-4d4f-9a79-ec53526a6861">
                   <to>
                     <member>inside</member>
                   </to>
                   <from>
                     <member>inside</member>
                   </from>
-                  <source>
-                    <member>DC-Users</member>
-                    <member>server_1</member>
-                  </source>
-                  <destination>
-                    <member>fw1 eth1-2</member>
-                  </destination>
                   <source-user>
                     <member>any</member>
                   </source-user>
@@ -881,8 +892,15 @@
                   <action>allow</action>
                   <rule-type>intrazone</rule-type>
                   <group-tag>inside</group-tag>
+                  <source>
+                    <member>DC-Users</member>
+                    <member>server_1</member>
+                  </source>
+                  <destination>
+                    <member>fw1 eth1-2</member>
+                  </destination>
                 </entry>
-                <entry name="permit to Internet" uuid="83118678-5bd8-45a3-b044-c8f7b34fddc1">
+                <entry name="permit to Internet" uuid="f909a5ab-1e13-4727-b98e-aef41b636981">
                   <to>
                     <member>outside</member>
                   </to>
@@ -922,7 +940,40 @@
                   </tag>
                   <rule-type>interzone</rule-type>
                 </entry>
-                <entry name="Allow Internet - ALL" uuid="602769bb-6bb4-4191-9477-a16f7cd94f8c">
+                <entry name="permit eve-ng vnc ports" uuid="68a53366-ee71-4655-9c98-c8978c88b676">
+                  <to>
+                    <member>outside</member>
+                  </to>
+                  <from>
+                    <member>inside</member>
+                  </from>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>vnc</member>
+                  </application>
+                  <service>
+                    <member>any</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>allow</action>
+                </entry>
+                <entry name="Allow Internet - ALL" uuid="d1e3438e-da61-46eb-8abc-eb87192cb2c1">
                   <to>
                     <member>outside</member>
                   </to>
@@ -960,9 +1011,62 @@
                   </tag>
                   <rule-type>interzone</rule-type>
                 </entry>
+                <entry name="permit FW1 to server subnet" uuid="5a623cd6-a0c7-43b0-bd94-6324a3f1fc3b">
+                  <to>
+                    <member>inside</member>
+                  </to>
+                  <from>
+                    <member>inside</member>
+                  </from>
+                  <destination>
+                    <member>10.0.10.0/24</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>allow</action>
+                  <rule-type>intrazone</rule-type>
+                  <source>
+                    <member>fw1 eth1-2</member>
+                  </source>
+                </entry>
               </rules>
             </security>
           </rulebase>
+          <user-id-collector>
+            <setting>
+              <wmi-account>company\svc_ldap</wmi-account>
+              <wmi-password>-AQ==E3IBJ3pufeRKdFuAd+xxaAuM7Qk=PM8yGuEXJhllaJ1xZ2pFaQ==</wmi-password>
+              <domain-name>company.pri</domain-name>
+              <enable-session>yes</enable-session>
+            </setting>
+          </user-id-collector>
+          <tag>
+            <entry name="inside">
+              <color>color2</color>
+            </entry>
+            <entry name="outside">
+              <color>color1</color>
+            </entry>
+            <entry name="permissive">
+              <color>color20</color>
+            </entry>
+          </tag>
           <import>
             <network>
               <interface>
@@ -991,26 +1095,6 @@
               <description>eth1/2</description>
             </entry>
           </address>
-          <tag>
-            <entry name="inside">
-              <color>color2</color>
-            </entry>
-            <entry name="outside">
-              <color>color1</color>
-            </entry>
-            <entry name="permissive">
-              <color>color20</color>
-            </entry>
-          </tag>
-          <user-id-collector>
-            <server-monitor/>
-            <setting>
-              <wmi-account>company\svc_ldap</wmi-account>
-              <wmi-password>-AQ==E3IBJ3pufeRKdFuAd+xxaAuM7Qk=PM8yGuEXJhllaJ1xZ2pFaQ==</wmi-password>
-              <domain-name>company.pri</domain-name>
-              <enable-session>yes</enable-session>
-            </setting>
-          </user-id-collector>
         </entry>
       </vsys>
     </entry>
