@@ -1,6 +1,6 @@
-Current configuration : 3197 bytes
+Current configuration : 3377 bytes
 !
-! Last configuration change at 11:52:29 mst Sat Oct 14 2023
+! Last configuration change at 22:25:19 mst Tue Jan 2 2024
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone
@@ -115,18 +115,24 @@ interface Ethernet1/2
  spanning-tree portfast edge
 !
 interface Ethernet1/3
- description Net
+ description docker
  switchport access vlan 10
  switchport mode access
  spanning-tree portfast edge
 !
 interface Ethernet2/0
- shutdown
+ description checkmk
+ switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast edge
 !
 interface Ethernet2/1
- shutdown
+ switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast edge
 !
 interface Ethernet2/2
+ description Net
  switchport access vlan 10
  switchport mode access
  spanning-tree portfast edge
@@ -182,8 +188,8 @@ line vty 0 4
  transport output ssh
  escape-character BREAK
 !
-ntp server time3.google.com
 ntp server time1.google.com
+ntp server time3.google.com
 ntp server time2.google.com
 ntp server time4.google.com
 !

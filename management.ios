@@ -1,4 +1,4 @@
-Current configuration : 2261 bytes
+Current configuration : 2342 bytes
 !
 ! No configuration change since last restart
 !
@@ -152,13 +152,16 @@ line con 0
  login local
 line aux 0
 line vty 0 4
+ exec-timeout 480 0
  login local
  transport preferred none
  transport input telnet ssh
 !
 ntp server time1.google.com
 ntp server time3.google.com
+ntp server pool.ntp.org
 ntp server time2.google.com
 ntp server time4.google.com
+ntp server 34.208.249.133 minpoll 10
 !
 end
